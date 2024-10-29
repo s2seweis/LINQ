@@ -31,15 +31,15 @@ namespace LINQToObjectsAndQueryOperators
             //    Console.WriteLine(i);
             //}
 
-            IEnumerable<int> reversedSortedInts = from i in someInts orderby i descending select i;
+            //IEnumerable<int> reversedSortedInts = from i in someInts orderby i descending select i;
 
-            foreach (int i in reversedSortedInts)
-            //foreach (int i in reversedInts)
-            {
-                Console.WriteLine(i);
-            }
+            //foreach (int i in reversedSortedInts)
+            ////foreach (int i in reversedInts)
+            //{
+            //    Console.WriteLine(i);
+            //}
 
-            //um.StudentAndUniversityNameCollection();
+            um.StudentAndUniversityNameCollection();
 
 
             //string input = Console.ReadLine();
@@ -109,6 +109,7 @@ namespace LINQToObjectsAndQueryOperators
                 student.Print();
             }
         }
+
 
         public void SortStudentsByAge()
         {
