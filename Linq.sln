@@ -5,6 +5,8 @@ VisualStudioVersion = 17.8.34931.61
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Linq1", "Linq\Linq1.csproj", "{82EA40E6-6AA2-4274-B3D9-8529B226DB94}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LINQToObjectsAndQueryOperators", "LINQToObjectsAndQueryOperators\LINQToObjectsAndQueryOperators.csproj", "{9B8C695B-C4AE-48CD-8BC0-58D75FBB6605}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{82EA40E6-6AA2-4274-B3D9-8529B226DB94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82EA40E6-6AA2-4274-B3D9-8529B226DB94}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82EA40E6-6AA2-4274-B3D9-8529B226DB94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B8C695B-C4AE-48CD-8BC0-58D75FBB6605}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B8C695B-C4AE-48CD-8BC0-58D75FBB6605}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B8C695B-C4AE-48CD-8BC0-58D75FBB6605}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B8C695B-C4AE-48CD-8BC0-58D75FBB6605}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
