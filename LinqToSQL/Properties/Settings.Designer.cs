@@ -33,5 +33,16 @@ namespace LinqToSQL.Properties {
                 return ((string)(this["LnqToSQLConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=NB242F34R44\\SQLEXPRESS;Initial Catalog=LnqToSQL;User ID=sa;Password=a" +
+            "lk123;Encrypt=True;TrustServerCertificate=True")]
+        public string LnqToSQLConnectionString1 {
+            get {
+                return ((string)(this["LnqToSQLConnectionString1"]));
+            }
+        }
     }
 }
