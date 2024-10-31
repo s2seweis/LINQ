@@ -4,7 +4,7 @@
         Title="MainWindow" Height="350" Width="525">
     <Grid>
 
-        <DataGrid x:Name="MainDataGrid" ItemsSource="{Binding ToniesLectures}"  HorizontalAlignment="Left" Height="400" Margin="10" VerticalAlignment="Top" Width="540"  />
+        <DataGrid x:Name="MainDataGrid" ItemsSource="{Binding  Lectures}"  HorizontalAlignment="Left" Height="400" Margin="10" VerticalAlignment="Top" Width="540"  />
 
     </Grid>
 </Window>
