@@ -2,7 +2,9 @@
 using System.Linq; // Import the System.Linq namespace for LINQ operations
 using System.Windows; // Import the System.Windows namespace for WPF (Windows Presentation Foundation) features
 using System.Configuration; // Import the System.Configuration namespace for accessing application configuration settings
-using System.Collections.ObjectModel; // Import the System.Collections.ObjectModel namespace for using observable collections
+using System.Collections.ObjectModel;
+using System;
+using System.Xml.Serialization; // Import the System.Collections.ObjectModel namespace for using observable collections
 
 namespace LinqToSQL.ViewModels // Define a namespace for the ViewModels related to the LinqToSQL application
 {
@@ -19,6 +21,10 @@ namespace LinqToSQL.ViewModels // Define a namespace for the ViewModels related 
 
         public ObservableCollection<Student> StudentsFromYale { get; set; } // Declare a public property for Students from Yale
 
+        public ObservableCollection<University> TransgendersUniversities { get; set; }
+
+        public ObservableCollection<Lecture> LecturesInBeijingTeck { get; set; }
+
         public MainWindowViewModel() // Constructor for the MainWindowViewModel class
         {
             string connectionString = ConfigurationManager.ConnectionStrings["LinqToSQL.Properties.Settings.LnqToSQLConnectionString"].ConnectionString; // Retrieve the connection string from the application's configuration file
@@ -28,10 +34,16 @@ namespace LinqToSQL.ViewModels // Define a namespace for the ViewModels related 
             Students = new ObservableCollection<Student>(dataContext.Student.ToList()); // Load students from the database into the Students collection
             Lectures = new ObservableCollection<Lecture>(dataContext.Lecture.ToList()); // Load lectures from the database into the Lectures collection
             StudentLectures = new ObservableCollection<StudentLecture>(dataContext.StudentLecture.ToList()); // Load student lectures from the database into the StudentLectures collection
-
-            ToniesLectures = new ObservableCollection<Lecture>(GetLecturesFromTonie()); // Load Tonie's lectures into the ToniesLectures collection
-
+            //ToniesLectures = new ObservableCollection<Lecture>(GetLecturesFromTonie()); // Load Tonie's lectures into the ToniesLectures collection
             StudentsFromYale = new ObservableCollection<Student>(GetAllStudentsFromYale()); // Load students from Yale into the StudentsFromYale collection
+
+            TransgendersUniversities = new ObservableCollection<University>(GetAllUniversitiesWithTransgender());
+
+            LecturesInBeijingTeck = new ObservableCollection<Lecture>(GetAllLecturesFromBeijingTech());
+
+            //InsertStudentLectureAssociations();
+            //UpdateTonie();
+            DeleteJame();
         }
 
         public void InsertUniversity() // Method to insert universities into the database
@@ -89,6 +101,8 @@ namespace LinqToSQL.ViewModels // Define a namespace for the ViewModels related 
         {
             Student carly = dataContext.Student.First(st => st.Name == "Carly"); // Retrieve Carly's student instance from the database
             Student tonie = dataContext.Student.First(st => st.Name == "Tonie"); // Retrieve Tonie's student instance from the database
+            Student leyle = dataContext.Student.First(st => st.Name == "Leyle"); // Retrieve Leyle's student instance from the database
+            Student jame = dataContext.Student.First(st => st.Name == "Jame"); // Retrieve Jame's student instance from the database
 
             Lecture math = dataContext.Lecture.First(lc => lc.Name == "Math"); // Retrieve the Math lecture instance from the database
             Lecture history = dataContext.Lecture.First(lc => lc.Name == "History"); // Retrieve the History lecture instance from the database
@@ -97,15 +111,24 @@ namespace LinqToSQL.ViewModels // Define a namespace for the ViewModels related 
             StudentLecture slTonieMath = new StudentLecture { Student = tonie, Lecture = math }; // Associate Tonie with Math lecture
             StudentLecture slTonieHistory = new StudentLecture { Student = tonie, Lecture = history }; // Associate Tonie with History lecture
 
+            StudentLecture slLeyleMath = new StudentLecture { Student = leyle, Lecture = math };
+            StudentLecture slJamehistory = new StudentLecture { Student = jame, Lecture = history };
+
             dataContext.StudentLecture.InsertOnSubmit(slCarlyMath); // Insert Carly's association into the data context
             dataContext.StudentLecture.InsertOnSubmit(slTonieMath); // Insert Tonie's Math association into the data context
             dataContext.StudentLecture.InsertOnSubmit(slTonieHistory); // Insert Tonie's History association into the data context
+           
+            dataContext.StudentLecture.InsertOnSubmit(slLeyleMath); // Insert Leyle's Math association into the data context
+            dataContext.StudentLecture.InsertOnSubmit(slJamehistory); // Insert Jame's History association into the data context
 
             dataContext.SubmitChanges(); // Submit changes to the database
 
             StudentLectures.Add(slCarlyMath); // Add Carly's association to the StudentLectures collection
             StudentLectures.Add(slTonieMath); // Add Tonie's Math association to the StudentLectures collection
             StudentLectures.Add(slTonieHistory); // Add Tonie's History association to the StudentLectures collection
+            
+            StudentLectures.Add(slLeyleMath); // Add Leyle's Math association to the StudentLectures collection
+            StudentLectures.Add(slJamehistory); // Add 's History association to the StudentLectures collection
 
             // Refresh Tonie's lectures after inserting associations
         }
@@ -129,6 +152,89 @@ namespace LinqToSQL.ViewModels // Define a namespace for the ViewModels related 
                                    select student; // Select the student entities
 
             return studentsFromYale.ToList(); // Convert the query result to a list and return it
+        }
+
+        //### How its used in the lecture without the MVVM Patern
+
+        //public void GetAllUniversitiesWithTransgenders()
+        //{
+        //    var transgendersUniversities = from student in dataContext.Student
+        //                                   join University in dataContext.University
+        //                                   on student.University equals University
+        //                                   where student.Gender == "trans-gender"
+        //                                   select University;
+        //}
+
+        //#Rebuld the method
+        public List <University> GetAllUniversitiesWithTransgender() 
+        {
+            var transgendersUniversities = from student in dataContext.Student
+                                           join University in dataContext.University
+                                           on student.University equals University
+                                           where student.Gender == "trans-gender"
+                                           select University;
+
+            return transgendersUniversities.ToList();
+        }
+
+
+        public List <Lecture> GetAllLecturesFromBeijingTech()
+        {
+            var lecturesInBeijingTeck = from sl in dataContext.StudentLecture 
+                                        join student in dataContext.Student on sl.StudentId equals student.Id
+                                        where student.University.Name == "Yale"
+                                        select sl.Lecture;
+
+            return lecturesInBeijingTeck.ToList();
+        }
+
+        public void UpdateTonie()
+        {
+            // Find the student with the name "Tonie"
+            Student Tonie = dataContext.Student.FirstOrDefault(st => st.Name == "Antonio");
+
+            // Check if Tonie exists in the database
+            if (Tonie != null)
+            {
+                // Update the name
+                Tonie.Name = "Tonie";
+
+                // Submit changes to the database
+                dataContext.SubmitChanges();
+            }
+            else
+            {
+                // Optional: Log a message if "Tonie" is not found
+                Console.WriteLine("Student 'Tonie' not found.");
+            }
+        }
+
+        public void DeleteJame()
+        {
+            try
+            {
+                // Find the student with the name "Jame"
+                Student Jame = dataContext.Student.FirstOrDefault(st => st.Name == "Jame");
+
+                // Check if Jame exists before attempting to delete
+                if (Jame != null)
+                {
+                    dataContext.Student.DeleteOnSubmit(Jame);
+                    dataContext.SubmitChanges();
+                    Console.WriteLine("Student 'Jame' has been successfully deleted.");
+                }
+                else
+                {
+                    // Optional: Log a message if "Jame" is not found
+                    Console.WriteLine("Student 'Jame' not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception message
+                Console.WriteLine($"An error occurred while deleting student 'Jame': {ex.Message}");
+                // Optionally, rethrow the exception or handle it according to your needs
+            }
         }
     }
 }
